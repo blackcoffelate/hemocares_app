@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".view.profile.ProfileEdit">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:elevation="2dp"
+        app:cardCornerRadius="10dp"
+        app:contentPadding="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <ImageView
+                android:id="@+id/backButtonEditProfile"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_baseline_arrow_back_24"
+                app:tint="@color/orange" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:text="Edit Profile"
+                    android:textColor="@color/blue"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="15dp"
+                android:gravity="left|center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/changePhotoUser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="Profile Foto"
+                        android:textAllCaps="true"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/photoUser"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:src="@drawable/ic_thumbnail"
+                        android:visibility="visible"
+                        app:civ_border_color="@color/white"
+                        app:civ_border_width="2dp"
+                        app:civ_circle_background_color="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="Ganti Foto"
+                        android:textAllCaps="true"
+                        android:textColor="@color/blue"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:text="Ubah foto mu supaya makin banyak yang kenal dengan mu."
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="15dp"
+                android:elevation="2dp"
+                app:cardCornerRadius="10dp"
+                app:contentPadding="15dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/t_email"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxStrokeColor="@color/blue"
+                        app:boxStrokeWidth="1dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/emailField"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:drawableStart="@drawable/ic_baseline_mark_email_read_24"
+                            android:drawablePadding="10dp"
+                            android:drawableTint="@color/blue"
+                            android:hint="Email..."
+                            android:inputType="textEmailAddress"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="14sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/t_address"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxStrokeColor="@color/blue"
+                        app:boxStrokeWidth="1dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/addressField"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:drawableStart="@drawable/ic_baseline_map_24"
+                            android:drawablePadding="10dp"
+                            android:drawableTint="@color/blue"
+                            android:hint="Alamat lengkap..."
+                            android:inputType="textPostalAddress"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="14sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/t_age"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxStrokeColor="@color/blue"
+                        app:boxStrokeWidth="1dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/ageField"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:drawableStart="@drawable/ic_baseline_emoji_people_24"
+                            android:drawablePadding="10dp"
+                            android:drawableTint="@color/blue"
+                            android:hint="Usia..."
+                            android:inputType="number"
+                            android:maxLength="3"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="14sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/t_birthDate"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxStrokeColor="@color/blue"
+                        app:boxStrokeWidth="1dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/birthDateField"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:drawableStart="@drawable/ic_baseline_cake_24"
+                            android:drawablePadding="10dp"
+                            android:drawableTint="@color/blue"
+                            android:hint="Tanggal lahir..."
+                            android:inputType="date"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="14sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/t_religion"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:hint="Agama..."
+                        app:boxBackgroundColor="@color/white"
+                        app:boxStrokeColor="@color/blue"
+                        app:hintTextAppearance="@color/black">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/religionField"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/white"
+                            android:drawableStart="@drawable/ic_baseline_self_improvement_24"
+                            android:drawablePadding="10dp"
+                            android:drawableTint="@color/blue"
+                            android:enabled="false"
+                            android:hint="Agama..."
+                            android:inputType="none"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="14sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/t_gender"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:hint="Jenis kelamin..."
+                        app:boxBackgroundColor="@color/white"
+                        app:boxStrokeColor="@color/blue"
+                        app:hintTextAppearance="@color/black">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/genderField"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/white"
+                            android:drawableStart="@drawable/ic_baseline_female_24"
+                            android:drawablePadding="10dp"
+                            android:drawableTint="@color/blue"
+                            android:enabled="false"
+                            android:hint="Jenis kelamin..."
+                            android:inputType="none"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="14sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/updateDataUserButton"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_margin="15dp"
+                android:layout_marginTop="10dp"
+                android:elevation="2dp"
+                app:cardBackgroundColor="@color/blue"
+                app:cardCornerRadius="10dp"
+                app:contentPadding="15dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="UPDATE"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

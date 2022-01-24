@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".view.dashboard.Dashboard">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:elevation="2dp"
+        app:cardCornerRadius="10dp"
+        app:contentPadding="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_baseline_dashboard_24"
+                app:tint="@color/orange" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:text="Hi,"
+                    android:textColor="@color/blue"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/fullnameUser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="Nama Lengkap"
+                    android:textColor="@color/blue"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_weight="0"
+                android:src="@drawable/ic_robot"
+                android:visibility="gone"
+                app:tint="@color/orange" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profilePhotoUser"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_weight="0"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_thumbnail"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_margin="10dp"
+                android:elevation="2dp"
+                app:cardCornerRadius="10dp">
+
+                <com.smarteist.autoimageslider.SliderView
+                    android:id="@+id/bannerSlider"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:sliderAnimationDuration="1000"
+                    app:sliderAutoCycleEnabled="true"
+                    app:sliderIndicatorAnimationDuration="1000"
+                    app:sliderIndicatorGravity="left|bottom"
+                    app:sliderIndicatorSelectedColor="@color/blue"
+                    app:sliderIndicatorUnselectedColor="@color/bluetransparent" />
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/joinUserCard"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_margin="10dp"
+                android:elevation="2dp"
+                android:visibility="visible"
+                app:cardBackgroundColor="@color/green"
+                app:cardCornerRadius="10dp"
+                app:contentPadding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Apakah kamu ingin jadi salah satu pahlawan kebaikan ?"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/joinHemocares"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Gabung Yuk"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        app:strokeColor="@color/white" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Daftar Pahlawan"
+                    android:textColor="@color/blue"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/viewAllUser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="@string/show_all" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/emptyDataDisplay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:elevation="2dp"
+                    android:visibility="gone"
+                    app:cardCornerRadius="10dp"
+                    app:contentPadding="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.airbnb.lottie.LottieAnimationView
+                            android:layout_width="250dp"
+                            android:layout_height="150dp"
+                            app:lottie_autoPlay="true"
+                            app:lottie_loop="true"
+                            app:lottie_rawRes="@raw/empty" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Belum ada pahlawan yang bergabung..."
+                            android:textColor="@color/blue"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <LinearLayout
+                    android:id="@+id/dataAvailable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/listUserJoin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:itemCount="5"
+                        tools:listitem="@layout/card_user_dashboard" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

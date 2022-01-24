@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/dashboard"
+        android:icon="@drawable/ic_hemocares_logo"
+        android:title="Dashboard"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_loupe"
+        android:iconTint="@color/white"
+        android:title="Search"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/daily"
+        android:icon="@drawable/ic_stopwatch"
+        android:iconTint="@color/white"
+        android:title="Daily"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/me"
+        android:icon="@drawable/ic_yoga"
+        android:iconTint="@color/white"
+        android:title="Me"
+        app:showAsAction="always" />
+</menu>

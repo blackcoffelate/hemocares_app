@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Hemocares</string>
+    <string name="app_version">V.0.0.1</string>
+    <string name="next">Selanjutnya</string>
+    <string name="get_started">Get Started</string>
+    <string name="skip">Lewatkan</string>
+    <string name="lorem_ipsum">Lorem Ipsum</string>
+    <string name="lorem_desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
+    <string name="username">Username...</string>
+    <string name="password">Password...</string>
+    <string name="masuk_sekarang">Masuk Sekarang</string>
+    <string name="regist_desc">Daftar jadi pahlawan sekarang, klik disini!</string>
+    <string name="nama_lengkap">Nama Lengkap ...</string>
+    <string name="nomor_telephone">Nomor Telephone...</string>
+    <string name="back_login">Yuk berbuat kebaikan sekarang!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main">MainActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="show_all">Lihat Semua</string>
+
+    <string name="about_us"><b>Hemocares</b> merupakan layanan peduli kesehatan yang memiliki tujuan utama mempertemukan setiap masyarakat yang peduli akan kesehatan untuk dapat tergabung dalam suatu komunitas kesehatan. \n\nDengan dukungan awal menyediakan sebuah layanan yang terkait langsung tentang keterbutuhan donor darah yang terkadang masih dirasa sulit untuk di dapatkan, terutama ketika pasien sedang dalam keadaan genting. \n\nDengan itu hemocares memberikan suatu fitur untuk mencari pendonor darah yang lokasinya dekat dengan seluruh masyarakat yang bersedian mendonorkan darahnya dengan menemukannya melalui layanan kami.</string>
+    <string name="user_aggrement"><b>Perjanjian Lisensi Pengguna</b> \n\nPENTING - Harap baca dengan cermat Perjanjian Lisensi Pengguna Akhir yang memembutuhkan persetujuan anda ("EULA") antara Anda ("Penerima Lisensi"), baik dan individu atau satu badan hukum tunggal, dan HEMOCARES yang diatur berdasarkan hukum Indonesia untuk Layanan yang ditentukan di bawah ini. Dengan secara eksplisit menerima EULA ini, atau dengan memasang, menyalin, mengunduh, mengakses, atau menggunakan situs, aplikasi, dan perangkat lunak yang tersedia di HEMOCARES, Anda mengakui bahwa Anda membaca, memahami, dan setuju untuk terikat dengan ketentuan ini EULA. Jika Anda tidak setuju dengan ketentuan EULA ini, jangan pasang atau gunakan layanan HEMOCARES, aplikasi, dan perangkat lunak. \n\nDimana calon pengguna layanan, penyedia layanan, pasien, keluarga pasien atau unduhan pihak lainnya atau menyediakan Perangkat Lunak untuk Penerima Lisensi dan / atau menginstal atau mengaktifkan Perangkat Lunak dalam bentuk Lisensi sebelum penggunaan Perangkat Lunak oleh Penerima Lisensi, seperti pengguna layanan, penyedia layanan, pasien, keluarga pasien atau lainnya pihak akan dianggap sebagai agen Penerima Lisensi yang bertindak atas nama Penerima Lisensi dan Penerima Lisensi akan dianggap telah menerima semua syarat dan ketentuan EULA ini seolah-olah Penerima Lisensi telah langsung mengunduh, menginstal, atau menggunakan Perangkat Lunak.\n\n<b>Membuka Akun</b> \n\nPendaftaran sebelumnya diperlukan bagi Anda untuk menggunakan Platform HEMOCARES. \n\nPerhatikan bahwa jika Platform perekrut Anda digunakan, dan dicakup oleh Perjanjian Keanggotaan, jika dapat digunakan, ditandatangani oleh pihak lain untuk penggunaan Anda, Anda menggunakan akun hanya sebagai perwakilan resmi dari pihak itu, dan bahwa Pihak tersebut memiliki kendali atas akun dan dapat, kapan saja, meminta HEMOCARES untuk menghentikan akses Anda ke HEMOCARES. \n\nPerhatikan lebih lanjut bahwa ketika Anda membuat atau mendaftar untuk Akun Recruiter menggunakan perusahaan, organisasi, atau nama entitas yuridis, maka (i) "Anda" termasuk Anda dan entitas dengan otoritas penuh untuk mengikat Korporasi atau entitas pada Perjanjian ini. , dan bahwa Anda menyetujui Perjanjian ini atas nama korporasi atau entitiy. Anda tidak diizinkan untuk menggunakan akun orang lain tanpa izin mereka. Penting bahwa Anda memberikan informasi yang akurat dan lengkap dalam membuat akun Anda.</string>
+    <string name="copyright">Copyright &#169; 2022, Hemocares.</string>
+</resources>
