@@ -1,4 +1,4 @@
-# hemocares_app
+# HEMOCARES APP
 
 Merupakan layanan aplikasi HEMOCARES dalam bentuk mobile aplikasi yang berjalan dalam sistem operasi android.
 
