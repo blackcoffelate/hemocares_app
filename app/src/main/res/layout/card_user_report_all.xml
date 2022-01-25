@@ -22,7 +22,7 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/photoProfileUserReport"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/sample_image" />
 
@@ -37,7 +37,6 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:elevation="2dp"
-        app:cardBackgroundColor="@color/blue"
         app:cardCornerRadius="10dp">
 
         <LinearLayout
@@ -67,7 +66,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:text="Fullname"
-                        android:textColor="@color/white"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -78,7 +76,6 @@
                         android:layout_marginStart="5dp"
                         android:layout_weight="3"
                         android:text="12 Juli 2021"
-                        android:textColor="@color/white"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -87,7 +84,7 @@
                         android:layout_height="15dp"
                         android:layout_weight="0"
                         android:src="@drawable/ic_baseline_invert_colors_24"
-                        app:tint="@color/white" />
+                        app:tint="@color/blue" />
 
                     <TextView
                         android:id="@+id/bloodTypeUserReport"
@@ -95,7 +92,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:text="AB"
-                        android:textColor="@color/white"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -125,7 +121,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/lorem_desc"
-                            android:textColor="@color/white"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -141,7 +136,7 @@
 
                     <ImageView
                         android:id="@+id/photoContentReport"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="150dp"
                         android:scaleType="centerCrop"
                         android:src="@drawable/sample_image"
@@ -154,14 +149,36 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    android:paddingBottom="10dp">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/ic_baseline_run_circle_24"
+                        app:tint="@color/blue" />
+
+                    <TextView
+                        android:id="@+id/typeUserReport"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="Type"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:src="@drawable/ic_baseline_map_24"
-                        app:tint="@color/white" />
+                        app:tint="@color/blue" />
 
                     <TextView
                         android:id="@+id/addressUserReport"
@@ -169,8 +186,37 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:text="Jl. PTPN VII Rejosari Natar Lampung Selatan"
-                        android:textColor="@color/white"
                         android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="#EAE1E1" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp">
+
+                    <ImageView
+                        android:id="@+id/likeReport"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_baseline_favorite_24"
+                        app:tint="@color/greytransparent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="0"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 

@@ -67,7 +67,7 @@ public class DailyReport extends Fragment {
         recycleUserReportAll.setHasFixedSize(true);
         recycleUserReportAll.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         adapterRecycleUserReportAll = new AdapterUserReportAll(getActivity(), listUserDataReport);
-        
+
         showDataReportFunction();
 
         return v;
@@ -86,17 +86,33 @@ public class DailyReport extends Fragment {
                                 if (dataUserArray.length() > 0) {
                                     for (int i = 0; i < dataUserArray.length(); i++) {
                                         JSONObject dataObject = dataUserArray.getJSONObject(i);
-                                        Log.d("DATA USER", String.valueOf(dataObject));
                                         ModelUserReportAll dataUserReportList = new ModelUserReportAll();
                                         String guidUser = dataObject.getString("GUID");
                                         String contentReport = dataObject.getString("CONTENT");
                                         String addressReport = dataObject.getString("ADDRESS");
                                         String photoReport = dataObject.getString("PHOTO");
+                                        String typeReport = dataObject.getString("REPORT_TYPE");
+
+                                        JSONArray dataUserDetail = dataObject.getJSONArray("USER_DATA");
+                                        Log.d("DATA USER", String.valueOf(dataUserDetail));
+                                        if (dataUserDetail.length() > 0) {
+                                            for (int x = 0; x < dataUserDetail.length(); x++) {
+                                                JSONObject dataUserObject = dataUserDetail.getJSONObject(x);
+                                                String fullnameUser = dataUserObject.getString("FULLNAME");
+                                                String photoUser = dataUserObject.getString("PHOTO");
+                                                String bloodTypeUser = dataUserObject.getString("BLOOD_TYPE");
+
+                                                dataUserReportList.setFULLNAME(fullnameUser);
+                                                dataUserReportList.setPHOTO(photoUser);
+                                                dataUserReportList.setBLOOD_TYPE(bloodTypeUser);
+                                            }
+                                        }
 
                                         dataUserReportList.setGUID(guidUser);
                                         dataUserReportList.setCONTENT(contentReport);
                                         dataUserReportList.setADDRESS(addressReport);
                                         dataUserReportList.setPHOTO_CONTENT(photoReport);
+                                        dataUserReportList.setREPORT_TYPE(typeReport);
 
                                         listUserDataReport.add(dataUserReportList);
                                         recycleUserReportAll.setAdapter(adapterRecycleUserReportAll);

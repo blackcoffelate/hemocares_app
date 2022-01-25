@@ -41,11 +41,11 @@ public class AdapterUserReportAll extends RecyclerView.Adapter<AdapterUserReport
     public void onBindViewHolder(@NonNull AdapterUserReportAll.ViewHolder holder, int position) {
         final ModelUserReportAll reportModel = listReport.get(position);
 
-//        if (reportModel.getPHOTO().equals("-")){
-//            holder.photoProfileUserReport.setImageResource(R.drawable.banner_blank);
-//        } else {
-//            Picasso.get().load(BaseURL.baseUrl + "images/" + reportModel.getPHOTO()).resize(500, 400).centerCrop().into(holder.photoProfileUserReport);
-//        }
+        if (reportModel.getPHOTO().equals("-")){
+            holder.photoProfileUserReport.setImageResource(R.drawable.banner_blank);
+        } else {
+            Picasso.get().load(BaseURL.baseUrl + "images/" + reportModel.getPHOTO()).resize(500, 400).centerCrop().into(holder.photoProfileUserReport);
+        }
 
         if (reportModel.getPHOTO_CONTENT().equals("-")) {
             holder.photoContentReportData.setImageResource(R.drawable.banner_blank);
@@ -58,6 +58,7 @@ public class AdapterUserReportAll extends RecyclerView.Adapter<AdapterUserReport
         holder.contentUserData.setText(reportModel.getCONTENT());
         holder.datePostData.setText(reportModel.getCREATED_AT());
         holder.addressUserData.setText(reportModel.getADDRESS());
+        holder.typeReportData.setText(reportModel.getREPORT_TYPE());
     }
 
     @Override
@@ -67,7 +68,7 @@ public class AdapterUserReportAll extends RecyclerView.Adapter<AdapterUserReport
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView bloodTypeData, fullnameUserData, contentUserData, addressUserData, datePostData;
+        TextView bloodTypeData, fullnameUserData, contentUserData, addressUserData, datePostData, typeReportData;
         ImageView photoContentReportData;
         CircleImageView photoProfileUserReport;
 
@@ -76,6 +77,7 @@ public class AdapterUserReportAll extends RecyclerView.Adapter<AdapterUserReport
 
             photoProfileUserReport = itemView.findViewById(R.id.photoProfileUserReport);
             bloodTypeData = itemView.findViewById(R.id.bloodTypeUserReport);
+            typeReportData = itemView.findViewById(R.id.typeUserReport);
             fullnameUserData = itemView.findViewById(R.id.fullnameUserReport);
             contentUserData = itemView.findViewById(R.id.contentUserReport);
             addressUserData = itemView.findViewById(R.id.addressUserReport);
