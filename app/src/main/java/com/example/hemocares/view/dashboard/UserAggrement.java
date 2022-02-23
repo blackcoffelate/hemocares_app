@@ -82,7 +82,6 @@ public class UserAggrement extends AppCompatActivity {
                 Animatoo.animateSlideRight(UserAggrement.this);
             }
         });
-
     }
 
     private void updateProfileFunction() {

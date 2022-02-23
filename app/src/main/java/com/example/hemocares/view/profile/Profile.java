@@ -26,6 +26,7 @@ import com.example.hemocares.service.App;
 import com.example.hemocares.service.BaseURL;
 import com.example.hemocares.service.GsonHelper;
 import com.example.hemocares.service.Prefs;
+import com.example.hemocares.service.Utils;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -80,11 +81,12 @@ public class Profile extends Fragment {
         religionUserData.setText(modelUser.getRELIGION());
         genderUserData.setText(modelUser.getGENDER());
         bloodTypeUserData.setText(modelUser.getBLOOD_TYPE());
+        yearsUserData.setText(Utils.convertMongoYears(modelUser.getCREATED_AT()));
 
         if (modelUser.getPHOTO().equals("-")) {
-            profilePhotoData.setImageResource(R.drawable.ic_thumbnail);
+            profilePhotoData.setImageResource(R.drawable.default_user);
         } else if (modelUser.getPHOTO().equals(null)) {
-            profilePhotoData.setImageResource(R.drawable.ic_thumbnail);
+            profilePhotoData.setImageResource(R.drawable.default_user);
         } else {
             Picasso.get().load(BaseURL.baseUrl + "images/" + modelUser.getPHOTO()).into(profilePhotoData);
         }
@@ -158,5 +160,4 @@ public class Profile extends Fragment {
 
         return v;
     }
-
 }

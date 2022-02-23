@@ -14,7 +14,7 @@ import com.example.hemocares.access.SignIn;
 
 public class SplashScreen extends AppCompatActivity {
 
-    private int time_milis = 100;
+    private int time_milis = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

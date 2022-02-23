@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Hemocares</string>
+    <string name="access_token">pk.eyJ1IjoianVsaXNvZXByYXB0byIsImEiOiJja3o4NDZqa3IxZXk2MnByeHJoMDAzcGM3In0.pWrlMRWZ-Jk2zm_OkLMkhQ</string>
     <string name="app_version">V.0.0.1</string>
+    <string name="title_location_permission">Membutuhkan akses lokasi</string>
+    <string name="text_location_permission">Membutuhkan akses lokasi</string>
+    <string name="ok">Allow</string>
     <string name="next">Selanjutnya</string>
     <string name="get_started">Get Started</string>
     <string name="skip">Lewatkan</string>

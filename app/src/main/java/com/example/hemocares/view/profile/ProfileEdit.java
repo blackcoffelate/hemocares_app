@@ -140,7 +140,7 @@ public class ProfileEdit extends AppCompatActivity {
         }
 
         if (modelUser.getPHOTO().equals("-")) {
-            photoUserData.setImageResource(R.drawable.ic_thumbnail);
+            photoUserData.setImageResource(R.drawable.default_user);
         } else {
             Picasso.get().load(BaseURL.baseUrl + "images/" + modelUser.getPHOTO()).into(photoUserData);
         }
@@ -272,7 +272,7 @@ public class ProfileEdit extends AppCompatActivity {
                 try {
                     BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
                     bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), bitmapOptions);
-                    bitmap = getResizedBitmap(bitmap, 400);
+                    bitmap = getResizedBitmap(bitmap, 500);
                     photoUserData.setImageBitmap(bitmap);
                     BitMapToString(bitmap);
                     String path = Environment.getExternalStorageDirectory() + File.separator + "hemocares" + File.separator + "default";
@@ -283,7 +283,7 @@ public class ProfileEdit extends AppCompatActivity {
                     try {
                         file_a.mkdirs();
                         outFile = new FileOutputStream(file_a);
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, outFile);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 40, outFile);
                         outFile.flush();
                         outFile.close();
                     } catch (FileNotFoundException e) {
@@ -305,7 +305,7 @@ public class ProfileEdit extends AppCompatActivity {
                 String picturePath = cursor.getString(columnIndex);
                 cursor.close();
                 bitmap = (BitmapFactory.decodeFile(picturePath));
-                bitmap = getResizedBitmap(bitmap, 400);
+                bitmap = getResizedBitmap(bitmap, 500);
                 Log.w("path of", picturePath + "");
                 photoUserData.setImageBitmap(bitmap);
                 BitMapToString(bitmap);
@@ -315,7 +315,7 @@ public class ProfileEdit extends AppCompatActivity {
 
     public String BitMapToString(Bitmap userImage1) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        userImage1.compress(Bitmap.CompressFormat.PNG, 20, baos);
+        userImage1.compress(Bitmap.CompressFormat.PNG, 40, baos);
         byte[] b = baos.toByteArray();
         imageFile = Base64.encodeToString(b, Base64.DEFAULT);
         return imageFile;

@@ -32,7 +32,9 @@ import com.example.hemocares.service.BaseURL;
 import com.example.hemocares.service.GsonHelper;
 import com.example.hemocares.service.Prefs;
 import com.example.hemocares.view.dashboard.assets.AdapterBannerSlider;
+import com.example.hemocares.view.profile.ProfileDetails;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
+import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 import com.squareup.picasso.Picasso;
 
@@ -54,11 +56,11 @@ public class Dashboard extends Fragment {
 
     SliderView sliderView;
     Button joinHemocaresButton;
-    CardView joinCard, emptyData;
+    CardView joinCard;
     CircleImageView profilePhotoData;
     RecyclerView recycleUser;
     RecyclerView.Adapter adapterRecycleUserJoin;
-    LinearLayout availableData;
+    LinearLayout availableData, emptyData;
     TextView viewAllUserJoin;
 
     @Override
@@ -91,8 +93,9 @@ public class Dashboard extends Fragment {
         AdapterBannerSlider adapterBanner = new AdapterBannerSlider(imageList);
 
         sliderView.setSliderAdapter(adapterBanner);
-        sliderView.setAutoCycle(true);
         sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM);
+        sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+        sliderView.setAutoCycle(true);
 
         modelUser = (ModelUser) GsonHelper.parseGson(App.getPref().getString(Prefs.PREF_STORE_PROFILE, ""), new ModelUser());
         TextView fullnameUserData = v.findViewById(R.id.fullnameUser);
@@ -105,9 +108,9 @@ public class Dashboard extends Fragment {
         }
 
         if (modelUser.getPHOTO().equals("-")) {
-            profilePhotoData.setImageResource(R.drawable.ic_thumbnail);
+            profilePhotoData.setImageResource(R.drawable.default_user);
         } else if (modelUser.getPHOTO().equals(null)){
-            profilePhotoData.setImageResource(R.drawable.ic_thumbnail);
+            profilePhotoData.setImageResource(R.drawable.default_user);
         } else {
             Picasso.get().load(BaseURL.baseUrl + "images/" + modelUser.getPHOTO()).into(profilePhotoData);
         }
@@ -129,6 +132,13 @@ public class Dashboard extends Fragment {
         adapterRecycleUserJoin = new AdapterUserJoin(getActivity(), listUserData);
 
         showDataUserJoinFunction();
+
+        profilePhotoData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ProfileDetails.class).putExtra("GUID", modelUser.getGUID()));
+            }
+        });
 
         return v;
     }

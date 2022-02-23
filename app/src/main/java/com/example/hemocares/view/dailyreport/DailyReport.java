@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +22,11 @@ import com.android.volley.toolbox.Volley;
 import com.example.hemocares.R;
 import com.example.hemocares.model.ModelUser;
 import com.example.hemocares.model.ModelUserReportAll;
-import com.example.hemocares.model.ModelUserShow;
 import com.example.hemocares.service.App;
 import com.example.hemocares.service.BaseURL;
 import com.example.hemocares.service.GsonHelper;
 import com.example.hemocares.service.Prefs;
 import com.example.hemocares.view.dailyreport.adapter.AdapterUserReportAll;
-import com.example.hemocares.view.dashboard.adapter.AdapterUserJoin;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,9 +43,8 @@ public class DailyReport extends Fragment {
 
     RecyclerView recycleUserReportAll;
     RecyclerView.Adapter adapterRecycleUserReportAll;
-    LinearLayout availableDataAll;
-    CardView emptyDataAll;
-    String STATUSUSER;
+    LinearLayout availableDataAll, emptyDataAll;
+    String STATUSUSER = "iya";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,7 +55,6 @@ public class DailyReport extends Fragment {
         mRequestQueue = Volley.newRequestQueue(getActivity());
 
         modelUser = (ModelUser) GsonHelper.parseGson(App.getPref().getString(Prefs.PREF_STORE_PROFILE, ""), new ModelUser());
-        STATUSUSER = modelUser.getSTATUS();
 
         recycleUserReportAll = v.findViewById(R.id.listUserReportAll);
         listUserDataReport = new ArrayList<>();
@@ -92,9 +87,10 @@ public class DailyReport extends Fragment {
                                         String addressReport = dataObject.getString("ADDRESS");
                                         String photoReport = dataObject.getString("PHOTO");
                                         String typeReport = dataObject.getString("REPORT_TYPE");
+                                        String createData = dataObject.getString("CREATED_AT");
 
                                         JSONArray dataUserDetail = dataObject.getJSONArray("USER_DATA");
-                                        Log.d("DATA USER", String.valueOf(dataUserDetail));
+
                                         if (dataUserDetail.length() > 0) {
                                             for (int x = 0; x < dataUserDetail.length(); x++) {
                                                 JSONObject dataUserObject = dataUserDetail.getJSONObject(x);
@@ -113,6 +109,7 @@ public class DailyReport extends Fragment {
                                         dataUserReportList.setADDRESS(addressReport);
                                         dataUserReportList.setPHOTO_CONTENT(photoReport);
                                         dataUserReportList.setREPORT_TYPE(typeReport);
+                                        dataUserReportList.setCREATED_AT(createData);
 
                                         listUserDataReport.add(dataUserReportList);
                                         recycleUserReportAll.setAdapter(adapterRecycleUserReportAll);

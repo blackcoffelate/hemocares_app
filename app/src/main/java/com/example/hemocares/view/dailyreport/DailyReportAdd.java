@@ -30,7 +30,6 @@ import android.os.Looper;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.text.InputType;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -136,7 +135,6 @@ public class DailyReportAdd extends AppCompatActivity {
 
         reportData = findViewById(R.id.reportField);
         typeReport = findViewById(R.id.typeReportField);
-        typeReport.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
 
         reportDataButton = findViewById(R.id.reportDataUserButton);
         changePhotoData = findViewById(R.id.changePhotoReport);
@@ -153,12 +151,6 @@ public class DailyReportAdd extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
-//        if (modelUser.getPHOTO().equals("-")) {
-//            photoReportData.setImageResource(R.drawable.ic_baseline_stream_24);
-//        } else {
-//            Picasso.get().load(BaseURL.baseUrl + "images/" + modelUser.getPHOTO()).into(photoReportData);
-//        }
 
         latUserData.setText("-00.00000000");
         longUserData.setText("00.00000000");

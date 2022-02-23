@@ -100,9 +100,7 @@ public class ModelUserReportAll {
         this.PHOTO = PHOTO;
     }
 
-    public String getCREATED_AT() {
-        return CREATED_AT;
-    }
+    public String getCREATED_AT() { return CREATED_AT; }
 
     public void setCREATED_AT(String CREATED_AT) {
         this.CREATED_AT = CREATED_AT;

@@ -18,10 +18,10 @@
         android:name=".service.App"
         android:allowBackup="true"
         android:fullBackupOnly="true"
-        android:icon="@mipmap/ic_launcher_main"
+        android:icon="@mipmap/ic_launcher_main_log"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_main_log"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
@@ -30,6 +30,9 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
+        <activity
+            android:name=".view.profile.ProfileDetails"
+            android:exported="false" />
         <activity
             android:name=".view.dailyreport.DailyReportAdd"
             android:exported="false"
@@ -54,10 +57,12 @@
         <activity
             android:name=".access.SignIn"
             android:exported="false"
+            android:noHistory="true"
             android:theme="@style/AppThemeRegistrasi" />
         <activity
             android:name=".utils.SplashScreen"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
             android:name=".MainActivity"
             android:exported="false"

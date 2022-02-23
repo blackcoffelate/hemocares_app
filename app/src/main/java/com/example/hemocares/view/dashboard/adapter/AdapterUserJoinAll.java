@@ -1,6 +1,7 @@
 package com.example.hemocares.view.dashboard.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hemocares.view.profile.ProfileDetails;
 import com.example.hemocares.R;
-import com.example.hemocares.model.ModelUserShow;
 import com.example.hemocares.model.ModelUserShowAll;
 import com.example.hemocares.service.BaseURL;
 import com.squareup.picasso.Picasso;
@@ -42,7 +44,7 @@ public class AdapterUserJoinAll extends RecyclerView.Adapter<AdapterUserJoinAll.
         final ModelUserShowAll userModel = listUser.get(position);
 
         if (userModel.getPHOTO().equals("-")){
-            holder.photoProfileUserData.setImageResource(R.drawable.banner_blank);
+            holder.photoProfileUserData.setImageResource(R.drawable.default_user);
         } else {
             Picasso.get().load(BaseURL.baseUrl + "images/" + userModel.getPHOTO()).resize(500, 400).centerCrop().into(holder.photoProfileUserData);
         }
@@ -53,6 +55,7 @@ public class AdapterUserJoinAll extends RecyclerView.Adapter<AdapterUserJoinAll.
         holder.phoneUserData.setText(userModel.getPHONE());
         holder.religionUserData.setText(userModel.getRELIGION());
         holder.genderUserData.setText(userModel.getGENDER());
+        holder.rangeData.setText(userModel.getRANGE());
         holder.textDeskripsi = userModel.getADDRESS();
 
         if (holder.textDeskripsi.length() > 30) {
@@ -62,6 +65,12 @@ public class AdapterUserJoinAll extends RecyclerView.Adapter<AdapterUserJoinAll.
             holder.addressUserData.setText(userModel.getADDRESS());
         }
 
+        holder.detailUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.startActivity(new Intent(context, ProfileDetails.class).putExtra("GUID", userModel.getGUID()));
+            }
+        });
     }
 
     @Override
@@ -76,9 +85,9 @@ public class AdapterUserJoinAll extends RecyclerView.Adapter<AdapterUserJoinAll.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
-        TextView bloodTypeData, fullnameUserData, ageUserData, phoneUserData, addressUserData, genderUserData, religionUserData;
+        TextView rangeData, bloodTypeData, fullnameUserData, ageUserData, phoneUserData, addressUserData, genderUserData, religionUserData;
         ImageView photoProfileUserData;
+        CardView detailUser;
 
         String textDeskripsi;
 
@@ -87,13 +96,14 @@ public class AdapterUserJoinAll extends RecyclerView.Adapter<AdapterUserJoinAll.
 
             bloodTypeData = itemView.findViewById(R.id.bloodTypeUserAllShow);
             fullnameUserData = itemView.findViewById(R.id.fullnameUserAllShow);
+            detailUser = itemView.findViewById(R.id.detailsUserAll);
             ageUserData = itemView.findViewById(R.id.ageUserAllShow);
             phoneUserData = itemView.findViewById(R.id.phoneUserAllShow);
             addressUserData = itemView.findViewById(R.id.addressUserAllShow);
             photoProfileUserData = itemView.findViewById(R.id.photoProfileUserAllShow);
             genderUserData = itemView.findViewById(R.id.genderUserAllShow);
             religionUserData = itemView.findViewById(R.id.religionUserAllShow);
-
+            rangeData = itemView.findViewById(R.id.rangeUserAllShow);
         }
     }
 }

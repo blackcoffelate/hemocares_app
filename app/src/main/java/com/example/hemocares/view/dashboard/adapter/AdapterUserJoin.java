@@ -1,6 +1,7 @@
 package com.example.hemocares.view.dashboard.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hemocares.view.profile.ProfileDetails;
 import com.example.hemocares.R;
 import com.example.hemocares.model.ModelUserShow;
 import com.example.hemocares.service.BaseURL;
@@ -39,8 +42,8 @@ public class AdapterUserJoin extends RecyclerView.Adapter<AdapterUserJoin.ViewHo
     public void onBindViewHolder(@NonNull AdapterUserJoin.ViewHolder holder, int position) {
         final ModelUserShow userModel = listUser.get(position);
 
-        if (userModel.getPHOTO().equals("-")){
-            holder.photoProfileUserData.setImageResource(R.drawable.banner_blank);
+        if (userModel.getPHOTO().equals("-")) {
+            holder.photoProfileUserData.setImageResource(R.drawable.default_user);
         } else {
             Picasso.get().load(BaseURL.baseUrl + "images/" + userModel.getPHOTO()).resize(500, 400).centerCrop().into(holder.photoProfileUserData);
         }
@@ -58,6 +61,12 @@ public class AdapterUserJoin extends RecyclerView.Adapter<AdapterUserJoin.ViewHo
             holder.addressUserData.setText(userModel.getADDRESS());
         }
 
+        holder.detailUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.startActivity(new Intent(context, ProfileDetails.class).putExtra("GUID", userModel.getGUID()));
+            }
+        });
     }
 
     @Override
@@ -66,9 +75,9 @@ public class AdapterUserJoin extends RecyclerView.Adapter<AdapterUserJoin.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
         TextView bloodTypeData, fullnameUserData, ageUserData, phoneUserData, addressUserData;
         ImageView photoProfileUserData;
+        CardView detailUser;
 
         String textDeskripsi;
 
@@ -77,11 +86,11 @@ public class AdapterUserJoin extends RecyclerView.Adapter<AdapterUserJoin.ViewHo
 
             bloodTypeData = itemView.findViewById(R.id.bloodTypeUserShow);
             fullnameUserData = itemView.findViewById(R.id.fullnameUserShow);
+            detailUser = itemView.findViewById(R.id.detailsUserDashboard);
             ageUserData = itemView.findViewById(R.id.ageUserShow);
             phoneUserData = itemView.findViewById(R.id.phoneUserShow);
             addressUserData = itemView.findViewById(R.id.addressUserShow);
             photoProfileUserData = itemView.findViewById(R.id.photoProfileUserShow);
-
         }
     }
 }
