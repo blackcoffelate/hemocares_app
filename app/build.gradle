@@ -59,6 +59,9 @@ dependencies {
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:6.0.1'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.5.0'
     implementation files('libs/jackson-databind-2.0.0.jar')
+    implementation files('libs/amqp-client.jar')
+    implementation files('libs/slf4j-api-1.7.26.jar')
+    implementation files('libs/slf4j-simple-1.7.26.jar')
 
     implementation 'com.karumi:dexter:5.0.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'

@@ -2,9 +2,9 @@ package com.example.hemocares.service;
 
 public class BaseURL {
 //    public static String baseUrl = "http://192.168.43.100:5060/";
-    public static String baseUrl = "http://192.168.1.16:5060/";
+//    public static String baseUrl = "http://192.168.4.250:5060/";
 //    public static String baseUrl = "http://192.168.1.8:5060/";
-//    public static String baseUrl = "http://studio81.co.id:5060/";
+    public static String baseUrl = "http://studio81.co.id:5060/";
 
     public static String login = baseUrl + "user/login";
     public static String register = baseUrl + "user/create";

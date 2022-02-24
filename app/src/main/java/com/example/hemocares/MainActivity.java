@@ -5,7 +5,6 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -13,16 +12,15 @@ import androidx.fragment.app.FragmentTransaction;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.Settings;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,28 +43,31 @@ import com.example.hemocares.view.dailyreport.DailyReportAdd;
 import com.example.hemocares.view.dashboard.Dashboard;
 import com.example.hemocares.view.findpeople.FindPeople;
 import com.example.hemocares.view.profile.Profile;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.mapbox.mapboxsdk.annotations.Icon;
-import com.mapbox.mapboxsdk.annotations.IconFactory;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.utils.BitmapUtils;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.TimeoutException;
 
 import es.dmoral.toasty.Toasty;
 
@@ -74,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     boolean backPress = false;
-    String STATUS;
 
     private RequestQueue mRequestQueue;
+    ModelUser modelUser;
 
     BottomAppBar bottomAppBars;
     Fragment fragment;
@@ -85,16 +86,57 @@ public class MainActivity extends AppCompatActivity {
 
     FusedLocationProviderClient fusedLocationProviderClient;
     private LocationManager locationManager;
-    String LATDATA, LONGDATA, GUID;
+    String GUID, LATDATA, LONGDATA, STATUS;
     double latMe, lngMe;
+    LocationRequest locationRequest;
 
-    ModelUser modelUser;
+    LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            if (locationResult == null) {
+                return;
+            }
+            for (Location location: locationResult.getLocations()) {
+                latMe = location.getLatitude();
+                lngMe = location.getLongitude();
+
+                LATDATA = String.valueOf(latMe);
+                LONGDATA = String.valueOf(lngMe);
+
+                sendLocationFunction(latMe, lngMe);
+                updateLocationFunction(latMe, lngMe);
+
+                JSONObject json = new JSONObject();
+                JSONArray locatiosArray = new JSONArray();
+
+                try {
+                    json.put("GUID", GUID);
+                    locatiosArray.put(LATDATA);
+                    locatiosArray.put(LONGDATA);
+                    json.put("PHONE", modelUser.getPHONE());
+                    json.put("FULLNAME", modelUser.getFULLNAME());
+                    json.put("BLOOD_TYPE", modelUser.getBLOOD_TYPE());
+                    json.put("LOCATION", locatiosArray);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if (modelUser.getSTATUS().equals("iya"))
+                    amqpSender(json);
+            }
+        }
+    };
+
+    String QUEUE_NAME = "hemocares";
+    ConnectionFactory factory;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        factory = new ConnectionFactory();
 
         mRequestQueue = Volley.newRequestQueue(this);
 
@@ -108,9 +150,9 @@ public class MainActivity extends AppCompatActivity {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
 
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setInterval(1000);
-        locationRequest.setFastestInterval(5000);
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(2000);
+        locationRequest.setFastestInterval(4000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -163,6 +205,30 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void amqpSender(JSONObject datas) {
+        try {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            factory.setHost("rmq2.pptik.id");
+            factory.setPort(5672);
+            factory.setUsername("kir_tanggamus");
+            factory.setPassword("kir_tanggamus");
+            factory.setVirtualHost("/kir_tanggamus");
+
+            Connection connection = factory.newConnection();
+            Channel channel = connection.createChannel();
+
+            channel.queueDeclare(QUEUE_NAME, true, false, false, null);
+            channel.basicPublish("amq.topic", "r_hemocares", null, datas.toString().getBytes());
+            System.out.println(" [x] Sent '" + datas + "'");
+            channel.close();
+            connection.close();
+        } catch (IOException | TimeoutException e) {
+            throw new RuntimeException("PROBLEM", e);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -175,51 +241,51 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("MissingPermission")
     private void getCurrentLocation() {
-        LocationManager manager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER) || manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-                @Override
-                public void onComplete(@NonNull Task<Location> task) {
-                    Location location = task.getResult();
-                    if (location != null) {
-                        latMe = location.getLatitude();
-                        lngMe = location.getLongitude();
+        LocationSettingsRequest request = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest).build();
+        SettingsClient client = LocationServices.getSettingsClient(this);
 
-                        LATDATA = String.valueOf(latMe);
-                        LONGDATA = String.valueOf(lngMe);
+        Task<LocationSettingsResponse> locationSettingsResponseTask = client.checkLocationSettings(request);
+        locationSettingsResponseTask.addOnSuccessListener(new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                startLocationUpdate();
+            }
+        });
 
-                        sendLocationFunction();
-                        updateLocationFunction();
-                    } else {
-                        LocationRequest locationRequest = new LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(1000).setFastestInterval(1000).setNumUpdates(1);
-                        LocationCallback locationCallback = new LocationCallback() {
-                            @Override
-                            public void onLocationResult(LocationResult locationResult) {
-                                Location location1 = locationResult.getLastLocation();
-                                latMe = location1.getLatitude();
-                                lngMe = location1.getLongitude();
-
-                                LATDATA = String.valueOf(latMe);
-                                LONGDATA = String.valueOf(lngMe);
-
-                                sendLocationFunction();
-                                updateLocationFunction();
-                            }
-                        };
-                        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+        locationSettingsResponseTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e instanceof ResolvableApiException) {
+                    ResolvableApiException apiException = (ResolvableApiException) e;
+                    try {
+                        apiException.startResolutionForResult(MainActivity.this, 1001);
+                    } catch (IntentSender.SendIntentException sendIntentException) {
+                        sendIntentException.printStackTrace();
                     }
                 }
-            });
-        } else {
-            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-        }
+            }
+        });
     }
 
-    private void sendLocationFunction() {
+    private void startLocationUpdate() {
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+    }
+
+    private void stopLocationUpdate() {
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopLocationUpdate();
+    }
+
+    private void sendLocationFunction(Double latMe, Double lngMe) {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("GUID", GUID);
-        params.put("LATITUDE", LATDATA);
-        params.put("LONGITUDE", LONGDATA);
+        params.put("LATITUDE", String.valueOf(latMe));
+        params.put("LONGITUDE", String.valueOf(lngMe));
         params.put("STATUS", STATUS);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, BaseURL.postLocation, new JSONObject(params),
@@ -242,11 +308,11 @@ public class MainActivity extends AppCompatActivity {
         mRequestQueue.add(request);
     }
 
-    private void updateLocationFunction() {
+     private void updateLocationFunction(Double latMe, Double lngMe) {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("GUID", GUID);
-        params.put("LATITUDE", LATDATA);
-        params.put("LONGITUDE", LONGDATA);
+        params.put("LATITUDE", String.valueOf(latMe));
+        params.put("LONGITUDE", String.valueOf(lngMe));
         params.put("STATUS", STATUS);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, BaseURL.updateLocation + GUID, new JSONObject(params),

@@ -37,14 +37,10 @@ public class FindInfoWindowMe extends InfoWindow {
         CardView markerMeDefault = (CardView) mView.findViewById(R.id.markerMe);
         CircleImageView userMe = (CircleImageView) mView.findViewById(R.id.userMeMarker);
         TextView fullnameMe = (TextView) mView.findViewById(R.id.fullnameMeMarker);
-        TextView bloodMe = (TextView) mView.findViewById(R.id.bloodTypeMeMarker);
         TextView phoneMe = (TextView) mView.findViewById(R.id.phoneMeMarker);
-        TextView addressMe = (TextView) mView.findViewById(R.id.addressMeMarker);
 
         fullnameMe.setText(modelUser.getFULLNAME());
-        bloodMe.setText(modelUser.getBLOOD_TYPE());
         phoneMe.setText(modelUser.getPHONE());
-        addressMe.setText(modelUser.getADDRESS());
         Picasso.get().load(BaseURL.baseUrl + "images/" + modelUser.getPHOTO()).into(userMe);
 
         markerMeDefault.setOnClickListener(new View.OnClickListener() {

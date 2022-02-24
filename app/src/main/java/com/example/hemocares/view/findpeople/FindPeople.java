@@ -21,6 +21,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Looper;
+import android.os.StrictMode;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -60,16 +61,23 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.utils.BitmapUtils;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.DeliverCallback;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
@@ -88,14 +96,18 @@ public class FindPeople extends Fragment {
 
     TextView bloodA, bloodB, bloodAB, bloodO;
     CardView filterData, filterBloodData, myLocation;
-    String GUID;
+    String GUID, GUIDALL;
     String guidUser;
     double parsingLat, parsingLng;
     Drawable drawableLive;
+    String QUEUE_NAME = "hemocares";
+    ConnectionFactory factory;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Mapbox.getInstance(getActivity(), getString(R.string.access_token));
+
+        factory = new ConnectionFactory();
 
         View v = inflater.inflate(R.layout.fragment_find_people, container, false);
 
@@ -201,9 +213,27 @@ public class FindPeople extends Fragment {
                                 markerOptions.title(modelUser.getFULLNAME());
                                 mapboxMaps.addMarker(markerOptions);
                                 mapboxMaps.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15.0f));
+                                if (mapboxMaps != null) {
+                                    mapboxMaps.setInfoWindowAdapter(new MapboxMap.InfoWindowAdapter() {
+                                        @Override
+                                        public View getInfoWindow(Marker marker) {
+                                            View v = getLayoutInflater().inflate(R.layout.find_info_window_me, null);
+
+                                            CircleImageView photo = (CircleImageView) v.findViewById(R.id.userMeMarker);
+                                            TextView fullnamed = (TextView) v.findViewById(R.id.fullnameMeMarker);
+                                            TextView phoned = (TextView) v.findViewById(R.id.phoneMeMarker);
+
+                                            photo.setImageResource(R.drawable.default_user);
+                                            fullnamed.setText(marker.getTitle());
+                                            phoned.setText(marker.getSnippet());
+
+                                            return v;
+                                        }
+                                    });
+                                }
                             } else {
                                 LocationRequest locationRequest = new LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(1000).setFastestInterval(1000).setNumUpdates(1);
-                                LocationCallback locationCallback = new LocationCallback(){
+                                LocationCallback locationCallback = new LocationCallback() {
                                     @Override
                                     public void onLocationResult(LocationResult locationResult) {
                                         Location location1 = locationResult.getLastLocation();
@@ -226,6 +256,24 @@ public class FindPeople extends Fragment {
                                         mapboxMaps.setMinZoomPreference(15.0f);
                                         mapboxMaps.setMaxZoomPreference(20.0f);
                                         mapboxMaps.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15.0f));
+                                        if (mapboxMaps != null) {
+                                            mapboxMaps.setInfoWindowAdapter(new MapboxMap.InfoWindowAdapter() {
+                                                @Override
+                                                public View getInfoWindow(Marker marker) {
+                                                    View v = getLayoutInflater().inflate(R.layout.find_info_window_me, null);
+
+                                                    CircleImageView photo = (CircleImageView) v.findViewById(R.id.userMeMarker);
+                                                    TextView fullnamed = (TextView) v.findViewById(R.id.fullnameMeMarker);
+                                                    TextView phoned = (TextView) v.findViewById(R.id.phoneMeMarker);
+
+                                                    photo.setImageResource(R.drawable.default_user);
+                                                    fullnamed.setText(marker.getTitle());
+                                                    phoned.setText(marker.getSnippet());
+
+                                                    return v;
+                                                }
+                                            });
+                                        }
                                     }
                                 };
                                 fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
@@ -282,139 +330,124 @@ public class FindPeople extends Fragment {
     }
 
     private void getLocationFunction() {
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, BaseURL.getLocation, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            String msg = response.getString("message");
-                            boolean statusMsg = response.getBoolean("status");
-                            if (statusMsg == true) {
-                                JSONArray dataUserArray = response.getJSONArray("data");
-                                if (dataUserArray.length() > 0) {
-                                    for (int i = 0; i < dataUserArray.length(); i++) {
-                                        JSONObject dataObject = dataUserArray.getJSONObject(i);
-                                        ModelUserShowMarkerAll dataUserListmarkerAll = new ModelUserShowMarkerAll();
-                                        guidUser = dataObject.getString("GUID");
-                                        String latitudeData = dataObject.getString("LATITUDE");
-                                        String longitudeData = dataObject.getString("LONGITUDE");
-                                        String statusData = dataObject.getString("STATUS");
+        try {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
 
-                                        if (statusData.equals("iya") && !guidUser.equals(GUID)){
-                                            parsingLat = Double.parseDouble(latitudeData);
-                                            parsingLng = Double.parseDouble(longitudeData);
-                                        }
+            factory.setHost("rmq2.pptik.id");
+            factory.setPort(5672);
+            factory.setUsername("kir_tanggamus");
+            factory.setPassword("kir_tanggamus");
+            factory.setVirtualHost("/kir_tanggamus");
 
-                                        final float result[] = new float[10];
-                                        Location.distanceBetween(latMe, lngMe, parsingLat, parsingLng, result);
-                                        float distanceLocation = result[0] / 1000;
-                                        float resultLocation = (float) (Math.round(distanceLocation * 100)) / 100;
-                                        float distanceBetweenUser = resultLocation;
+            Connection connection = factory.newConnection();
+            Channel channel = connection.createChannel();
 
-                                        String distanceLocationBetween = String.valueOf(distanceBetweenUser);
+            channel.queueDeclare("hemocares", true, false, false, null);
 
-                                        dataUserListmarkerAll.setRANGE(distanceLocationBetween);
+            System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
-                                        JSONArray dataUserDetail = dataObject.getJSONArray("USER_DATA");
+            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+                String message = (new String(delivery.getBody(), StandardCharsets.UTF_8));
+                setMarkerData(message);
+                System.out.println(" [x] Received '" + message + "'");
+            };
 
-                                        if (dataUserDetail.length() > 0) {
-                                            for (int x = 0; x < dataUserDetail.length(); x++) {
-                                                JSONObject dataUserObject = dataUserDetail.getJSONObject(x);
-                                                String bloodTypeUser = dataUserObject.getString("BLOOD_TYPE");
+            channel.basicConsume("hemocares", true, deliverCallback, consumerTag -> { });
+        } catch (IOException | TimeoutException e) {
+            throw new RuntimeException("PROBLEM", e);
+        }
+    }
 
-                                                String fullnameUser = dataUserObject.getString("FULLNAME");
-                                                String phoneUser = dataUserObject.getString("PHONE");
-                                                String addressUser = dataUserObject.getString("ADDRESS");
-                                                String profilePhotoUser = dataUserObject.getString("PHOTO");
-
-                                                if (bloodTypeUser.equals("A")) {
-                                                    drawableLive = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_marker_a, null);
-                                                } else if (bloodTypeUser.equals("B")) {
-                                                    drawableLive = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_marker_b, null);
-                                                } else if (bloodTypeUser.equals("AB")) {
-                                                    drawableLive = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_marker_ab, null);
-                                                } else if (bloodTypeUser.equals("O")) {
-                                                    drawableLive = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_marker_o, null);
-                                                } else {
-                                                    drawableLive = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_marker_me, null);
-                                                }
-
-                                                maps.getMapAsync(new OnMapReadyCallback() {
-                                                    @Override
-                                                    public void onMapReady(MapboxMap mapboxMap) {
-
-                                                        final Map<String, Marker> namedMarkers = new HashMap<String, Marker>();
-
-                                                        LatLng latLongUser = new LatLng(parsingLat, parsingLng);
-                                                        Marker marker = namedMarkers.get(guidUser);
-
-                                                        if (marker == null) {
-                                                            MarkerOptions options = getMarkerOption(guidUser);
-                                                            marker = mapboxMap.addMarker(options.title(fullnameUser).snippet(phoneUser).position(latLongUser));
-                                                            namedMarkers.put(guidUser, marker);
-                                                        } else {
-                                                            marker.setPosition(latLongUser);
-                                                        }
-
-                                                        if (mapboxMap != null){
-                                                            mapboxMap.setInfoWindowAdapter(new MapboxMap.InfoWindowAdapter() {
-                                                                @Override
-                                                                public View getInfoWindow(Marker marker) {
-                                                                    View v = getLayoutInflater().inflate(R.layout.find_info_window_all, null);
-
-                                                                    CircleImageView photo = (CircleImageView) v.findViewById(R.id.userAllMarker);
-                                                                    TextView fullnamed = (TextView) v.findViewById(R.id.fullnameAllMarker);
-                                                                    TextView phoned = (TextView) v.findViewById(R.id.phoneAllMarker);
-                                                                    CardView called = (CardView) v.findViewById(R.id.callAll);
-
-                                                                    photo.setImageResource(R.drawable.default_user);
-                                                                    fullnamed.setText(marker.getTitle());
-                                                                    phoned.setText(marker.getSnippet());
-
-                                                                    String phoneDataUser = marker.getSnippet();
-
-                                                                    String callMePhone = phoneDataUser.replaceFirst("0", "+62");
-
-                                                                    called.setOnClickListener(new View.OnClickListener() {
-                                                                        @Override
-                                                                        public void onClick(View v) {
-                                                                            String url = "https://api.whatsapp.com/send?phone=" + callMePhone;
-                                                                            Intent i = new Intent(Intent.ACTION_VIEW);
-                                                                            i.setPackage("com.whatsapp");
-                                                                            i.setData(Uri.parse(url));
-                                                                            startActivity(i);
-                                                                        }
-                                                                    });
-                                                                    return v;
-                                                                }
-                                                            });
-                                                        }
-                                                    }
-                                                });
-
-                                                dataUserListmarkerAll.setFULLNAME(fullnameUser);
-                                                dataUserListmarkerAll.setPHONE(phoneUser);
-                                                dataUserListmarkerAll.setADDRESS(addressUser);
-                                                dataUserListmarkerAll.setBLOOD_TYPE(bloodTypeUser);
-                                                dataUserListmarkerAll.setPHOTO(profilePhotoUser);
-                                            }
-                                        }
-
-                                        listUserDataMarkerAll.add(dataUserListmarkerAll);
-                                    }
-                                }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
+    private void setMarkerData(String message) {
+        maps.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.e("ERROR", error.getMessage());
+            public void onMapReady(MapboxMap mapboxMap) {
+                final Map<String, Marker> namedMarkers = new HashMap<String, Marker>();
+
+                JSONArray dataArray;
+                Double latData = null;
+                Double lngData = null;
+                GUIDALL = null;
+                String FULLNAME = null;
+                String PHONE = null;
+                String BLOOD_TYPE;
+
+                try {
+                    JSONObject json = new JSONObject(message);
+                    dataArray = (JSONArray) json.get("LOCATION");
+                    GUIDALL = json.getString("GUID");
+                    latData = Double.parseDouble(String.valueOf(dataArray.get(0)));
+                    lngData = Double.parseDouble(String.valueOf(dataArray.get(1)));
+                    PHONE = json.getString("PHONE");
+                    FULLNAME = json.getString("FULLNAME");
+                    BLOOD_TYPE = json.getString("BLOOD_TYPE");
+
+                    if (BLOOD_TYPE.equals("A")) {
+                        drawableLive = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_marker_a, null);
+                    } else if (BLOOD_TYPE.equals("B")) {
+                        drawableLive = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_marker_b, null);
+                    } else if (BLOOD_TYPE.equals("AB")) {
+                        drawableLive = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_marker_ab, null);
+                    } else if (BLOOD_TYPE.equals("O")) {
+                        drawableLive = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_marker_o, null);
+                    } else {
+                        drawableLive = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_marker_me, null);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if (!GUIDALL.equals(modelUser.getGUID())) {
+                    LatLng latLongUser = new LatLng(latData, lngData);
+                    Marker marker = namedMarkers.get(GUIDALL);
+
+                    if (marker == null) {
+                        MarkerOptions options = getMarkerOption(guidUser);
+                        marker = mapboxMap.addMarker(options.title(FULLNAME).snippet(PHONE).position(latLongUser));
+                        namedMarkers.put(guidUser, marker);
+                    } else {
+                        marker.setPosition(latLongUser);
+                    }
+
+                    if (mapboxMap != null) {
+                        mapboxMap.setInfoWindowAdapter(new MapboxMap.InfoWindowAdapter() {
+                            @Override
+                            public View getInfoWindow(Marker marker) {
+
+                                View v = getLayoutInflater().inflate(R.layout.find_info_window_all, null);
+
+                                CircleImageView photo = (CircleImageView) v.findViewById(R.id.userAllMarker);
+                                TextView fullnamed = (TextView) v.findViewById(R.id.fullnameAllMarker);
+                                TextView phoned = (TextView) v.findViewById(R.id.phoneAllMarker);
+                                CardView called = (CardView) v.findViewById(R.id.callAll);
+
+                                photo.setImageResource(R.drawable.default_user);
+                                fullnamed.setText(marker.getTitle());
+                                phoned.setText(marker.getSnippet());
+
+                                String phoneDataUser = marker.getSnippet();
+
+                                String callMePhone = phoneDataUser.replaceFirst("0", "+62");
+
+                                called.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String url = "https://api.whatsapp.com/send?phone=" + callMePhone;
+                                        Intent i = new Intent(Intent.ACTION_VIEW);
+                                        i.setPackage("com.whatsapp");
+                                        i.setData(Uri.parse(url));
+                                        startActivity(i);
+                                    }
+                                });
+
+                                return v;
+                            }
+                        });
+                    }
+                }
             }
         });
-        mRequestQueue.add(request);
     }
 
     private MarkerOptions getMarkerOption(String guidUser) {
